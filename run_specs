@@ -1,0 +1,7 @@
+#!/bin/bash
+
+[ -f composer.phar ] || curl -sS https://getcomposer.org/installer | php
+php composer.phar self-update
+php composer.phar install
+
+bin/phpspec $@

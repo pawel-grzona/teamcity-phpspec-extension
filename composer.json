@@ -1,0 +1,14 @@
+{
+    "require-dev": {
+        "phpspec/phpspec2": "1.0.*@dev"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src"
+        }
+    },
+    "minimum-stability": "dev"
+}
