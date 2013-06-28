@@ -1,6 +1,6 @@
 {
     "name": "pawel-grzona/teamcity-phpspec-extension",
-    "require-dev": {
+    "require": {
         "phpspec/phpspec2": "1.0.*@dev"
     },
     "config": {
