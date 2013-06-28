@@ -10,7 +10,7 @@ In your composer.json:
 
 ```json
 {
-    "require": {
+    "require-dev": {
         "pawel-grzona/teamcity-phpspec-extension": "*"
     }
 }
