@@ -1,5 +1,5 @@
 {
-    "name": "teamcity-phpspec-extension",
+    "name": "pawel-grzona/teamcity-phpspec-extension",
     "require-dev": {
         "phpspec/phpspec2": "1.0.*@dev"
     },
