@@ -2,6 +2,8 @@
 
 Makes TeamCity report PHP specs execution in real-time.
 
+[![Build Status](https://travis-ci.org/pawel-grzona/teamcity-phpspec-extension.png)](https://travis-ci.org/pawel-grzona/teamcity-phpspec-extension)
+
 ## Installation
 
 In your composer.json:
