@@ -1,10 +1,10 @@
 {
     "name": "pawel-grzona/teamcity-phpspec-extension",
+    "description": "Makes TeamCity display phpspec execution results in real-time.",
+    "keywords": ["teamcity", "phpspec", "extension"],
+    "license": "MIT",
     "require": {
         "phpspec/phpspec2": "1.0.*@dev"
-    },
-    "config": {
-        "bin-dir": "bin"
     },
     "autoload": {
         "psr-0": {

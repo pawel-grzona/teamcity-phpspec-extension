@@ -1,6 +1,6 @@
 #phpspec extension for TeamCity
 
-Makes TeamCity report PHP specs execution in real-time.
+Makes TeamCity display phpspec execution results in real-time.
 
 [![Build Status](https://travis-ci.org/pawel-grzona/teamcity-phpspec-extension.png)](https://travis-ci.org/pawel-grzona/teamcity-phpspec-extension)
 
