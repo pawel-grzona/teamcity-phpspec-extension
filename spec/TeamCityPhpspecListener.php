@@ -1,5 +1,4 @@
 <?php
-
 namespace spec;
 
 use PHPSpec2\ObjectBehavior,
@@ -17,7 +16,7 @@ class TeamCityPhpspecListener extends ObjectBehavior
         $this->beConstructedWith($io);
     }
 
-    function it_should_return_subscribed_events()
+    function it_returns_subscribed_events()
     {
         self::getSubscribedEvents()->shouldReturn(array(
             'beforeSpecification' => 'beforeSpecification',
@@ -27,39 +26,39 @@ class TeamCityPhpspecListener extends ObjectBehavior
         ));
     }
 
-    function it_should_announce_specification_start($io)
+    function it_announces_specification_start($io)
     {
         $io->write("##teamcity[testSuiteStarted name='Specification']\n")->shouldBeCalled();
         $this->beforeSpecification($this->specificationEvent());
     }
 
-    function it_should_announce_example_start($io)
+    function it_announces_example_start($io)
     {
         $io->write("##teamcity[testStarted name='Example' captureStandardOutput='true']\n")->shouldBeCalled();
         $this->beforeExample($this->exampleEvent());
     }
 
-    function it_should_announce_example_finish($io)
+    function it_announces_example_finish($io)
     {
         $io->write("##teamcity[testFinished name='Example' duration='1.2']\n")->shouldBeCalled();
         $this->afterExample($this->exampleEvent(ExampleEvent::PASSED, 0.0012));
     }
 
-    function it_should_announce_failed_example($io)
+    function it_announces_failed_example($io)
     {
         $io->getWrappedSubject()->shouldReceive('write')->with("##teamcity[testFailed name='Example' details='See full log for details']\n")->twice();
         $io->write("##teamcity[testFinished name='Example' duration='0']\n")->shouldNotBeCalled();
         foreach (array(ExampleEvent::FAILED, ExampleEvent::BROKEN) as $result) $this->afterExample($this->exampleEvent($result));
     }
 
-    function it_should_announce_ignored_example($io)
+    function it_announces_ignored_example($io)
     {
         $io->getWrappedSubject()->shouldReceive('write')->with("##teamcity[testIgnored name='Example' message='Exception!']\n")->once();
         $io->write("##teamcity[testFinished name='Example' duration='0']\n")->shouldNotBeCalled();
         $this->afterExample($this->exampleEvent(ExampleEvent::PENDING, 0, new \Exception('Exception!')));
     }
 
-    function it_should_announce_specification_finish($io)
+    function it_announces_specification_finish($io)
     {
         $io->write("##teamcity[testSuiteFinished name='Specification']\n")->shouldBeCalled();
         $this->afterSpecification($this->specificationEvent());
