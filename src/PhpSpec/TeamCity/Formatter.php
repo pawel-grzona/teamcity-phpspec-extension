@@ -4,26 +4,10 @@ namespace PhpSpec\TeamCity;
 use PhpSpec\Event\SpecificationEvent,
     PhpSpec\Event\ExampleEvent,
     PhpSpec\Console\IO,
-    Symfony\Component\EventDispatcher\EventSubscriberInterface;
+    PhpSpec\Formatter\BasicFormatter;
 
-class Listener implements EventSubscriberInterface
+class Formatter extends BasicFormatter
 {
-    /**
-     * @var IO
-     */
-    private $io;
-
-    public function __construct(IO $io)
-    {
-        $this->io = $io;
-    }
-
-    public static function getSubscribedEvents()
-    {
-        $events = array('beforeSpecification', 'beforeExample', 'afterExample', 'afterSpecification');
-        return array_combine($events, $events);
-    }
-
     public function beforeSpecification(SpecificationEvent $event)
     {
         $this->started('Suite', $event->getSpecification()->getTitle());
@@ -39,7 +23,10 @@ class Listener implements EventSubscriberInterface
         $result = $event->getResult();
         $name = $event->getExample()->getTitle();
 
-        if (ExampleEvent::PASSED != $result) return ExampleEvent::PENDING == $result ? $this->ignored($name, $event->getException()->getMessage()) : $this->failed($name);
+        if (ExampleEvent::PASSED != $result) {
+            ExampleEvent::PENDING == $result ? $this->ignored($name, $event->getException()->getMessage()) : $this->failed($name);
+            return;
+        }
 
         $duration = $event->getTime() * 1000;
         $this->finished('', $name, " duration='$duration'");
@@ -74,7 +61,7 @@ class Listener implements EventSubscriberInterface
 
     private function event($type, $action, $name, $param)
     {
-        $this->io->write("##teamcity[test$type$action name='$name'$param]\n");
+        $this->getIO()->write("##teamcity[test$type$action name='$name'$param]\n");
     }
 
 }

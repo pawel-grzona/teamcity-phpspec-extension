@@ -19,7 +19,7 @@ In your composer.json:
 }
 ```
 
-## Usage
+## Configuration
 
 In your phpspec.yml:
 
@@ -27,6 +27,10 @@ In your phpspec.yml:
 extensions:
     - PhpSpec\TeamCity\Extension
 ```
+
+## Usage
+
+./phpspec -f teamcity
 
 ## Requirements
 

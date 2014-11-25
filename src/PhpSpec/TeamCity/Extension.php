@@ -8,8 +8,8 @@ class Extension implements ExtensionInterface
 {
     public function load(ServiceContainer $container)
     {
-        $container->set('event_dispatcher.listeners', function($container) {
-            return new Listener($container->get('io'));
+        $container->set('formatter.formatters.teamcity', function(ServiceContainer $container) {
+            return new Formatter($container->get('formatter.presenter'), $container->get('console.io'), $container->get('event_dispatcher.listeners.stats'));
         });
     }
 }

@@ -6,24 +6,17 @@ use PhpSpec\ObjectBehavior,
     PhpSpec\Event\SpecificationEvent,
     PhpSpec\Event\ExampleEvent;
 
-class ListenerSpec extends ObjectBehavior
+class FormatterSpec extends ObjectBehavior
 {
+    // $presenter, IO $io, StatisticsCollector
     /**
+     * @param \PhpSpec\Formatter\Presenter\PresenterInterface $presenter
      * @param \PhpSpec\Console\IO $io
+     * @param \PhpSpec\Listener\StatisticsCollector $stats
      */
-    function let($io)
+    function let($presenter, $io, $stats)
     {
-        $this->beConstructedWith($io);
-    }
-
-    function it_returns_subscribed_events()
-    {
-        self::getSubscribedEvents()->shouldReturn(array(
-            'beforeSpecification' => 'beforeSpecification',
-            'beforeExample'       => 'beforeExample',
-            'afterExample'        => 'afterExample',
-            'afterSpecification'  => 'afterSpecification'
-        ));
+        $this->beConstructedWith($presenter, $io, $stats);
     }
 
     function it_announces_specification_start($io)
