@@ -9,7 +9,7 @@ class ExtensionSpec extends ObjectBehavior
     /**
      * @param \PhpSpec\ServiceContainer $container
      */
-    function it_adds_event_listener_on_initialization($container)
+    function it_registers_TeamCity_formatter_when_loaded($container)
     {
         $container->set('formatter.formatters.teamcity', \Prophecy\Argument::type('Closure'))->shouldBeCalled();
         $this->load($container);
