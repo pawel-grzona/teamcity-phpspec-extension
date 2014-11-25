@@ -25,7 +25,7 @@ In your phpspec.yml:
 
 ```yml
 extensions:
-  - PhpSpec\TeamCity\Formatter
+    - PhpSpec\TeamCity\Extension
 ```
 
 ## Requirements
