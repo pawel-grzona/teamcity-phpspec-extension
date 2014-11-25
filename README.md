@@ -4,6 +4,9 @@ Makes TeamCity display phpspec execution results in real-time.
 
 [![Build Status](https://travis-ci.org/pawel-grzona/teamcity-phpspec-extension.png)](https://travis-ci.org/pawel-grzona/teamcity-phpspec-extension)
 
+This version is rebuilt to work with phpspec/phpspec
+rather than phpspec/phpspec2 and as such is not backward compatible.
+
 ## Installation
 
 In your composer.json:
@@ -11,7 +14,7 @@ In your composer.json:
 ```json
 {
     "require-dev": {
-        "pawel-grzona/teamcity-phpspec-extension": "1.*"
+        "pawel-grzona/teamcity-phpspec-extension": "2.*"
     }
 }
 ```
@@ -22,7 +25,7 @@ In your phpspec.yml:
 
 ```yml
 extensions:
-  - TeamCityPhpspecExtension
+  - PhpSpec\TeamCity\Formatter
 ```
 
 ## Requirements

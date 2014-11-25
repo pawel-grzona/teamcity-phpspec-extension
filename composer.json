@@ -4,15 +4,15 @@
     "keywords": ["teamcity", "phpspec", "extension"],
     "license": "MIT",
     "require": {
-        "phpspec/phpspec2": "1.0.*@dev"
+        "phpspec/phpspec": "~2.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "*"
     },
     "autoload": {
         "psr-0": {
             "": "src"
         }
-    },
-    "config": {
-        "bin-dir": "bin"
     },
     "minimum-stability": "dev"
 }
