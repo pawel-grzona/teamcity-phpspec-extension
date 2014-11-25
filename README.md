@@ -11,7 +11,7 @@ In your composer.json:
 ```json
 {
     "require-dev": {
-        "pawel-grzona/teamcity-phpspec-extension": "*"
+        "pawel-grzona/teamcity-phpspec-extension": "1.*"
     }
 }
 ```
