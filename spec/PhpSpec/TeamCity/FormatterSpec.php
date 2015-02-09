@@ -39,11 +39,11 @@ class FormatterSpec extends ObjectBehavior
 
     function it_formats_failed_example($io)
     {
-        $io->write("##teamcity[testFailed name='Example' details='See full log for details']\n")->shouldBeCalledTimes(2);
+        $io->write("##teamcity[testFailed name='Example' details='Exception!']\n")->shouldBeCalledTimes(2);
         $io->write("##teamcity[testFinished name='Example' duration='0']\n")->shouldNotBeCalled();
 
         foreach (array(ExampleEvent::FAILED, ExampleEvent::BROKEN) as $result) {
-            $this->afterExample($this->exampleEvent($result));
+            $this->afterExample($this->exampleEvent($result, 0, new \Exception('Exception!')));
         }
     }
 
