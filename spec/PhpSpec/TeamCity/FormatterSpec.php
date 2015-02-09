@@ -6,7 +6,9 @@ use PhpSpec\ObjectBehavior,
     PhpSpec\Event\ExampleEvent,
     PhpSpec\Formatter\Presenter\PresenterInterface,
     PhpSpec\Console\IO,
-    PhpSpec\Listener\StatisticsCollector;
+    PhpSpec\Listener\StatisticsCollector,
+    PhpSpec\Loader\Node\SpecificationNode,
+    PhpSpec\Loader\Node\ExampleNode;
 
 class FormatterSpec extends ObjectBehavior
 {
@@ -15,56 +17,72 @@ class FormatterSpec extends ObjectBehavior
         $this->beConstructedWith($presenter, $io, $stats);
     }
 
-    function it_formats_specification_start($io)
+    function it_formats_specification_start($io, SpecificationNode $node)
     {
+        $node->getTitle()->willReturn('Specification');
         $io->write("##teamcity[testSuiteStarted name='Specification']\n")->shouldBeCalled();
-        $this->beforeSpecification($this->specificationEvent());
+        $this->beforeSpecification($this->specificationEvent($node));
     }
 
-    function it_formats_example_start($io)
+    function it_formats_specification_finish(IO $io, SpecificationNode $node)
     {
-        $io->write("##teamcity[testStarted name='Example' captureStandardOutput='true']\n")->shouldBeCalled();
-        $this->beforeExample($this->exampleEvent());
-    }
-
-    function it_formats_example_finish($io)
-    {
-        $io->write("##teamcity[testFinished name='Example' duration='1.2']\n")->shouldBeCalled();
-        $this->afterExample($this->exampleEvent(ExampleEvent::PASSED, 0.0012));
-    }
-
-    function it_formats_failed_example($io)
-    {
-        $io->write("##teamcity[testFailed name='Example' details='Exception!']\n")->shouldBeCalledTimes(2);
-        $io->write("##teamcity[testFinished name='Example' duration='0']\n")->shouldNotBeCalled();
-
-        foreach (array(ExampleEvent::FAILED, ExampleEvent::BROKEN) as $result) {
-            $this->afterExample($this->exampleEvent($result, 0, new \Exception('Exception!')));
-        }
-    }
-
-    function it_formats_ignored_example($io)
-    {
-        $io->write("##teamcity[testIgnored name='Example' message='Exception!']\n")->shouldBeCalledTimes(1);
-        $io->write("##teamcity[testFinished name='Example' duration='0']\n")->shouldNotBeCalled();
-        $this->afterExample($this->exampleEvent(ExampleEvent::PENDING, 0, new \Exception('Exception!')));
-    }
-
-    function it_formats_specification_finish($io)
-    {
+        $node->getTitle()->willReturn('Specification');
         $io->write("##teamcity[testSuiteFinished name='Specification']\n")->shouldBeCalled();
-        $this->afterSpecification($this->specificationEvent());
+        $this->afterSpecification($this->specificationEvent($node));
+    }
+
+    function it_formats_example_start(IO $io, ExampleNode $node)
+    {
+        $node->getTitle()->willReturn('Example');
+        $io->write("##teamcity[testStarted name='Example' captureStandardOutput='true']\n")->shouldBeCalled();
+        $this->beforeExample($this->exampleEvent($node));
+    }
+
+    function it_formats_example_finish(IO $io, ExampleNode $node)
+    {
+        $node->getTitle()->willReturn('Example');
+        $io->write("##teamcity[testFinished name='Example' duration='1.2']\n")->shouldBeCalled();
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::PASSED, 0.0012));
+    }
+
+    function it_formats_failed_example(IO $io, ExampleNode $node)
+    {
+        $node->getTitle()->willReturn('Example');
+        $io->write("##teamcity[testFailed name='Example' details='Exception!']\n")->shouldBeCalled();
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::FAILED, 0, new \Exception('Exception!')));
+    }
+
+    function it_formats_broken_example_as_failed(IO $io, ExampleNode $node)
+    {
+        $node->getTitle()->willReturn('Example');
+        $io->write("##teamcity[testFailed name='Example' details='Exception!']\n")->shouldBeCalled();
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::BROKEN, 0, new \Exception('Exception!')));
+    }
+
+    function it_does_not_format_finish_of_failed_example(IO $io, ExampleNode $node)
+    {
+        $node->getTitle()->willReturn('Example');
+        $io->write(\Prophecy\Argument::any())->shouldBeCalled();
+        $io->write("##teamcity[testFinished name='Example' duration='1.2']\n")->shouldNotBeCalled();
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::FAILED, 0.0012));
+    }
+
+    function it_formats_ignored_example(IO $io, ExampleNode $node)
+    {
+        $node->getTitle()->willReturn('Example');
+        $io->write("##teamcity[testIgnored name='Example' message='Exception!']\n")->shouldBeCalled();
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::PENDING, 0, new \Exception('Exception!')));
     }
 
     // -- Private
 
-    private function specificationEvent()
+    private function specificationEvent(SpecificationNode $node)
     {
-        return new SpecificationEvent(\Mockery::mock('PhpSpec\Loader\Node\SpecificationNode')->shouldReceive('getTitle')->once()->andReturn('Specification')->getMock());
+        return new SpecificationEvent($node->getWrappedObject());
     }
 
-    private function exampleEvent($result = ExampleEvent::PASSED, $time = 0, $exception = null)
+    private function exampleEvent(ExampleNode $node, $result = ExampleEvent::PASSED, $time = 0, $exception = null)
     {
-        return new ExampleEvent(\Mockery::mock('PhpSpec\Loader\Node\ExampleNode')->shouldReceive('getTitle')->once()->andReturn('Example')->getMock(), $time, $result, $exception);
+        return new ExampleEvent($node->getWrappedObject(), $time, $result, $exception ? : new \Exception);
     }
 }
