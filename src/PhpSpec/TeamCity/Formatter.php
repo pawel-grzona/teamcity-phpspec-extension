@@ -38,7 +38,8 @@ class Formatter extends BasicFormatter
     private function afterNotPassedExample(ExampleEvent $event)
     {
         $name = $this->title($event);
-        ExampleEvent::PENDING == $event->getResult() ? $this->ignored($name, $event->getException()->getMessage()) : $this->failed($name);
+        $message = $event->getException()->getMessage();
+        ExampleEvent::PENDING == $event->getResult() ? $this->ignored($name, $message) : $this->failed($name, $message);
     }
 
     private function started($type, $name, $param = '')
@@ -51,9 +52,9 @@ class Formatter extends BasicFormatter
         $this->event($type, 'Finished', $name, $param);
     }
 
-    private function failed($name)
+    private function failed($name, $message)
     {
-        $this->event('', 'Failed', $name, " details='See full log for details'");
+        $this->event('', 'Failed', $name, " details='$message'");
     }
 
     private function ignored($name, $message)
