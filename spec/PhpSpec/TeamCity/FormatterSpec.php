@@ -1,20 +1,16 @@
 <?php
 namespace spec\PhpSpec\TeamCity;
 
-
 use PhpSpec\ObjectBehavior,
     PhpSpec\Event\SpecificationEvent,
-    PhpSpec\Event\ExampleEvent;
+    PhpSpec\Event\ExampleEvent,
+    PhpSpec\Formatter\Presenter\PresenterInterface,
+    PhpSpec\Console\IO,
+    PhpSpec\Listener\StatisticsCollector;
 
 class FormatterSpec extends ObjectBehavior
 {
-    // $presenter, IO $io, StatisticsCollector
-    /**
-     * @param \PhpSpec\Formatter\Presenter\PresenterInterface $presenter
-     * @param \PhpSpec\Console\IO $io
-     * @param \PhpSpec\Listener\StatisticsCollector $stats
-     */
-    function let($presenter, $io, $stats)
+    function let(PresenterInterface $presenter, IO $io, StatisticsCollector $stats)
     {
         $this->beConstructedWith($presenter, $io, $stats);
     }

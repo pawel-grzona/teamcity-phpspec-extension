@@ -3,7 +3,6 @@ namespace PhpSpec\TeamCity;
 
 use PhpSpec\Event\SpecificationEvent,
     PhpSpec\Event\ExampleEvent,
-    PhpSpec\Console\IO,
     PhpSpec\Formatter\BasicFormatter;
 
 class Formatter extends BasicFormatter
@@ -20,16 +19,7 @@ class Formatter extends BasicFormatter
 
     public function afterExample(ExampleEvent $event)
     {
-        $result = $event->getResult();
-        $name = $event->getExample()->getTitle();
-
-        if (ExampleEvent::PASSED != $result) {
-            ExampleEvent::PENDING == $result ? $this->ignored($name, $event->getException()->getMessage()) : $this->failed($name);
-            return;
-        }
-
-        $duration = $event->getTime() * 1000;
-        $this->finished('', $name, " duration='$duration'");
+        ExampleEvent::PASSED == $event->getResult() ? $this->afterPassedExample($event) : $this->afterNotPassedExample($event);
     }
 
     public function afterSpecification(SpecificationEvent $event)
@@ -38,6 +28,18 @@ class Formatter extends BasicFormatter
     }
 
     // -- Private
+
+    private function afterPassedExample(ExampleEvent $event)
+    {
+        $duration = $event->getTime() * 1000;
+        $this->finished('', $this->title($event), " duration='$duration'");
+    }
+
+    private function afterNotPassedExample(ExampleEvent $event)
+    {
+        $name = $this->title($event);
+        ExampleEvent::PENDING == $event->getResult() ? $this->ignored($name, $event->getException()->getMessage()) : $this->failed($name);
+    }
 
     private function started($type, $name, $param = '')
     {
@@ -64,4 +66,8 @@ class Formatter extends BasicFormatter
         $this->getIO()->write("##teamcity[test$type$action name='$name'$param]\n");
     }
 
+    private function title(ExampleEvent $event)
+    {
+        return $event->getExample()->getTitle();
+    }
 }
