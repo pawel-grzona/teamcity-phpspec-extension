@@ -1,4 +1,4 @@
-#PhpSpec extension for TeamCity
+#PhpSpec extension for TeamCity CI
 
 Formats PhpSpec output to make TeamCity display spec execution results
 in real-time.
