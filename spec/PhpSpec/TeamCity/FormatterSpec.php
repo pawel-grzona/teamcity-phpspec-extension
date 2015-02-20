@@ -17,7 +17,7 @@ class FormatterSpec extends ObjectBehavior
         $this->beConstructedWith($presenter, $io, $stats);
     }
 
-    function it_formats_specification_start($io, SpecificationNode $node)
+    function it_formats_specification_start(IO $io, SpecificationNode $node)
     {
         $node->getTitle()->willReturn('Specification');
         $io->write("##teamcity[testSuiteStarted name='Specification']\n")->shouldBeCalled();
@@ -49,14 +49,14 @@ class FormatterSpec extends ObjectBehavior
     {
         $node->getTitle()->willReturn('Example');
         $io->write("##teamcity[testFailed name='Example' details='Exception!']\n")->shouldBeCalled();
-        $this->afterExample($this->exampleEvent($node, ExampleEvent::FAILED, 0, new \Exception('Exception!')));
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::FAILED, 0, 'Exception!'));
     }
 
     function it_formats_broken_example_as_failed(IO $io, ExampleNode $node)
     {
         $node->getTitle()->willReturn('Example');
         $io->write("##teamcity[testFailed name='Example' details='Exception!']\n")->shouldBeCalled();
-        $this->afterExample($this->exampleEvent($node, ExampleEvent::BROKEN, 0, new \Exception('Exception!')));
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::BROKEN, 0, 'Exception!'));
     }
 
     function it_does_not_format_finish_of_failed_example(IO $io, ExampleNode $node)
@@ -71,7 +71,21 @@ class FormatterSpec extends ObjectBehavior
     {
         $node->getTitle()->willReturn('Example');
         $io->write("##teamcity[testIgnored name='Example' message='Exception!']\n")->shouldBeCalled();
-        $this->afterExample($this->exampleEvent($node, ExampleEvent::PENDING, 0, new \Exception('Exception!')));
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::PENDING, 0, 'Exception!'));
+    }
+
+    function it_escapes_special_characters(IO $io, ExampleNode $node)
+    {
+        $node->getTitle()->willReturn("Example '\n\r|[]");
+        $io->write("##teamcity[testIgnored name='Example |'|\n|\r|||[|]' message='Exception |'|\n|\r|||[|]!']\n")->shouldBeCalled();
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::PENDING, 0, "Exception '\n\r|[]!"));
+    }
+
+    function it_escapes_unicode_symbols(IO $io, ExampleNode $node)
+    {
+        $node->getTitle()->willReturn("Example 0x1234");
+        $io->write("##teamcity[testIgnored name='Example |0x1234' message='Exception |0x4321!']\n")->shouldBeCalled();
+        $this->afterExample($this->exampleEvent($node, ExampleEvent::PENDING, 0, 'Exception 0x4321!'));
     }
 
     // -- Private
@@ -81,8 +95,8 @@ class FormatterSpec extends ObjectBehavior
         return new SpecificationEvent($node->getWrappedObject());
     }
 
-    private function exampleEvent(ExampleNode $node, $result = ExampleEvent::PASSED, $time = 0, $exception = null)
+    private function exampleEvent(ExampleNode $node, $result = ExampleEvent::PASSED, $time = 0, $exceptionMessage = '')
     {
-        return new ExampleEvent($node->getWrappedObject(), $time, $result, $exception ? : new \Exception);
+        return new ExampleEvent($node->getWrappedObject(), $time, $result, new \Exception($exceptionMessage));
     }
 }

@@ -54,21 +54,26 @@ class Formatter extends BasicFormatter
 
     private function failed($name, $message)
     {
-        $this->event('', 'Failed', $name, " details='$message'");
+        $this->event('', 'Failed', $name, " details='{$this->escape($message)}'");
     }
 
     private function ignored($name, $message)
     {
-        $this->event('', 'Ignored', $name, " message='$message'");
+        $this->event('', 'Ignored', $name, " message='{$this->escape($message)}'");
     }
 
     private function event($type, $action, $name, $param)
     {
-        $this->getIO()->write("##teamcity[test$type$action name='$name'$param]\n");
+        $this->getIO()->write("##teamcity[test$type$action name='{$this->escape($name)}'$param]\n");
     }
 
     private function title(ExampleEvent $event)
     {
         return $event->getExample()->getTitle();
+    }
+
+    private function escape($text)
+    {
+        return preg_replace("/(['\n\r|\[\]]|0x\d+)/", '|$1', $text);
     }
 }
