@@ -34,8 +34,16 @@ extensions:
 ## Usage
 
 ```bash
-./phpspec -f teamcity
+./phpspec run -f teamcity
 ```
+
+## TeamCity Configuration
+
+* Add a Build Step
+* Runner Type: Command line
+* Run: Custom Script
+* Custom Script: `/path/to/phpspec run -f teamcity`
+* phpSpec tests will be included in the overall test count along with phpUnit, etc.
 
 ## Requirements
 
