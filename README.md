@@ -12,14 +12,8 @@ rather than phpspec/phpspec2 and as such is not backward compatible.
 
 ## Installation
 
-In your composer.json:
-
-```json
-{
-    "require-dev": {
-        "pawel-grzona/teamcity-phpspec-extension": "2.*"
-    }
-}
+```
+composer require pawel-grzona/teamcity-phpspec-extension:3.* --dev
 ```
 
 ## Configuration
@@ -28,7 +22,7 @@ In your phpspec.yml:
 
 ```yml
 extensions:
-    - PhpSpec\TeamCity\Extension
+    PhpSpec\TeamCity\Extension: ~
 ```
 
 ## Usage

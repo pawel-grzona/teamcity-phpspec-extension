@@ -1,2 +1,2 @@
 extensions:
-    - PhpSpec\TeamCity\Extension
+    PhpSpec\TeamCity\Extension: ~
