@@ -1,9 +1,9 @@
 <?php
 namespace PhpSpec\TeamCity;
 
-use PhpSpec\Event\SpecificationEvent,
-    PhpSpec\Event\ExampleEvent,
-    PhpSpec\Formatter\BasicFormatter;
+use PhpSpec\Event\SpecificationEvent;
+use PhpSpec\Event\ExampleEvent;
+use PhpSpec\Formatter\BasicFormatter;
 
 class Formatter extends BasicFormatter
 {
@@ -26,8 +26,6 @@ class Formatter extends BasicFormatter
     {
         $this->finished('Suite', $event->getSpecification()->getTitle());
     }
-
-    // -- Private
 
     private function afterPassedExample(ExampleEvent $event)
     {
