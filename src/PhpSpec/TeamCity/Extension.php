@@ -8,7 +8,7 @@ class Extension implements PhpSpecExtension
 {
     public function load(ServiceContainer $container, array $params)
     {
-        $container->set('formatter.formatters.teamcity', function (ServiceContainer $container) {
+        $container->define('formatter.formatters.teamcity', function (ServiceContainer $container) {
             return new Formatter(
                 $container->get('formatter.presenter'),
                 $container->get('console.io'),

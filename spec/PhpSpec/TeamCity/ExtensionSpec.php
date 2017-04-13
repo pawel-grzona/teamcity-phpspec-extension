@@ -14,7 +14,7 @@ class ExtensionSpec extends ObjectBehavior
 
     public function it_registers_TeamCity_formatter_when_loaded(ServiceContainer $container)
     {
-        $container->set('formatter.formatters.teamcity', Argument::type('Closure'))->shouldBeCalled();
+        $container->define('formatter.formatters.teamcity', Argument::type('Closure'))->shouldBeCalled();
         $this->load($container, []);
     }
 }
